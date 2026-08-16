@@ -1,184 +1,102 @@
-import type { Earnings } from "../types";
+import type { Earnings, Expectation, MangaPanel, PriceReaction, RatingLevel } from "../types";
+import { supabaseSelect } from "../lib/supabase";
 
-export const earnings: Earnings[] = [
-  {
-    code: "6920",
-    companyName: "レーザーテック",
-    sector: "半導体製造装置",
-    announcedAt: "15:30",
-    category: "好決算なのに下落",
-    attentionScore: 98,
-    headline: "【悲報】\n最高益なのに\n市場の期待には届かず\nPTSでフルボッコ…",
-    shortHeadline: "最高益なのに市場から怒られる",
-    summary:
-      "前期は減収減益となりましたが、受注は大幅に回復。来期は売上25.8%増のV字回復を予想し、増配も発表しました。会社の業績見通し自体は強いものの、市場予想を下回ったことで、PTSでは大きく売られています。",
-    points: [
-      "受注高は前年比 +125.7%",
-      "来期売上予想は2,900億円（+25.8%）",
-      "年間配当351円へ増配",
-      "ただし市場コンセンサス未達",
-      "PTS -8.07%",
-    ],
-    tags: ["最高益予想", "受注回復", "増配", "期待未達で下落"],
-    ratings: {
-      earnings: "strong",
-      outlook: "strong",
-      marketExpectation: "miss",
-      priceReaction: "down",
-    },
-    results: {
-      revenue: { value: 2304, yoy: -8.3 },
-      operatingProfit: { value: 1052, yoy: -14.3 },
-      ordinaryProfit: { value: 1109, yoy: -12.4 },
-      netProfit: { value: 843, yoy: -14.7 },
-      orders: { value: 2375, yoy: 125.7 },
-    },
-    forecast: {
-      revenue: { value: 2900, yoy: 25.8 },
-      operatingProfit: { value: 1350, yoy: 28.3 },
-    },
-    dividend: { value: 351, difference: 51 },
-    pts: {
-      price: 27890,
-      change: -2450,
-      changePercent: -8.07,
-      previousClose: 30340,
-      sparkline: [30340, 29920, 29420, 28680, 28210, 27890],
-    },
-    manga: [
-      { title: "会社の主張", speaker: "会社", dialogue: "AI特需で完全復活や！受注も爆増！", mood: "confident" },
-      { title: "決算内容", speaker: "会社", dialogue: "受注2倍超！来期売上 +25.8%！増配もするで！", mood: "happy" },
-      { title: "市場の反応", speaker: "市場", dialogue: "うーん…予想よりちょっと弱いかな", mood: "neutral" },
-      { title: "ガーン", speaker: "会社", dialogue: "PTS -8.07%。会社としては強いけど、期待値が高すぎた", mood: "shocked" },
-    ],
-  },
-  {
-    code: "7203",
-    companyName: "トヨタ自動車",
-    sector: "自動車",
-    announcedAt: "13:25",
-    category: "神決算",
-    attentionScore: 94,
-    headline: "爆益＆上方修正！\n北米好調で絶好調\nPTS +4.82%",
-    shortHeadline: "北米好調で上方修正、増配も発表",
-    summary:
-      "北米販売と円安効果が重なり、利益水準が大きく改善。通期見通しを引き上げ、増配も発表したことで、素直に買われる決算となっています。",
-    points: ["北米販売が想定以上に堅調", "通期営業利益予想を上方修正", "増配で株主還元も強化", "PTS +4.82%"],
-    tags: ["神決算", "上方修正", "増配"],
-    ratings: {
-      earnings: "strong",
-      outlook: "strong",
-      marketExpectation: "beat",
-      priceReaction: "up",
-    },
-    results: {
-      revenue: { value: 45600, yoy: 12.4 },
-      operatingProfit: { value: 5200, yoy: 31.8 },
-      ordinaryProfit: { value: 6100, yoy: 28.2 },
-      netProfit: { value: 4300, yoy: 24.6 },
-    },
-    forecast: {
-      revenue: { value: 48200, yoy: 5.7 },
-      operatingProfit: { value: 5750, yoy: 10.6 },
-    },
-    dividend: { value: 85, difference: 10 },
-    pts: {
-      price: 3420,
-      change: 157,
-      changePercent: 4.82,
-      previousClose: 3263,
-      sparkline: [3263, 3298, 3340, 3375, 3404, 3420],
-    },
-    manga: [
-      { title: "会社の主張", speaker: "会社", dialogue: "北米がめちゃくちゃ走ってます！", mood: "confident" },
-      { title: "決算内容", speaker: "会社", dialogue: "利益も上方修正、配当も増やします", mood: "happy" },
-      { title: "市場の反応", speaker: "市場", dialogue: "これは文句なしに強い", mood: "happy" },
-      { title: "結果", speaker: "市場", dialogue: "PTS +4.82%。王道の好決算", mood: "confident" },
-    ],
-  },
-  {
-    code: "9984",
-    companyName: "ソフトバンクグループ",
-    sector: "投資持株会社",
-    announcedAt: "16:00",
-    category: "最高益更新",
-    attentionScore: 91,
-    headline: "純利益は爆増！\n投資先好調で\n過去最高益更新",
-    shortHeadline: "投資先の評価益で純利益が急回復",
-    summary:
-      "主力投資先の株価上昇とファンド評価益が寄与し、純利益が大幅に回復。値動きは大きいものの、今期は投資会社としての強さが前面に出ています。",
-    points: ["投資先評価益が利益を押し上げ", "純利益は過去最高益を更新", "市場はリスクより回復力を評価", "PTS +6.45%"],
-    tags: ["最高益更新", "投資先好調", "純利益爆増"],
-    ratings: {
-      earnings: "strong",
-      outlook: "neutral",
-      marketExpectation: "beat",
-      priceReaction: "up",
-    },
-    results: {
-      revenue: { value: 7120, yoy: 8.1 },
-      operatingProfit: { value: 860, yoy: 18.6 },
-      ordinaryProfit: { value: 2280, yoy: 72.4 },
-      netProfit: { value: 1680, yoy: 146.2 },
-    },
-    pts: {
-      price: 11240,
-      change: 681,
-      changePercent: 6.45,
-      previousClose: 10559,
-      sparkline: [10559, 10740, 10880, 11010, 11160, 11240],
-    },
-    manga: [
-      { title: "会社の主張", speaker: "会社", dialogue: "投資先が一気に伸びました", mood: "confident" },
-      { title: "決算内容", speaker: "会社", dialogue: "純利益が爆増、過去最高益です", mood: "happy" },
-      { title: "市場の反応", speaker: "市場", dialogue: "今日はリスクより夢を見る日", mood: "confident" },
-      { title: "結果", speaker: "市場", dialogue: "PTS +6.45%。派手に評価", mood: "happy" },
-    ],
-  },
-  {
-    code: "9432",
-    companyName: "NTT",
-    sector: "通信",
-    announcedAt: "15:00",
-    category: "増配・自社株買い",
-    attentionScore: 76,
-    headline: "増収増益で安定の強さ\n増配も発表で\n株主ニッコリ",
-    shortHeadline: "守りの強さと増配で安心感",
-    summary:
-      "通信事業が堅調に推移し、増収増益を確保。派手さはないものの増配も発表し、長期保有層には安心感のある内容です。",
-    points: ["通信事業が安定成長", "増収増益を確保", "年間配当を引き上げ", "PTS +1.25%"],
-    tags: ["増収増益", "増配", "安定成長"],
-    ratings: {
-      earnings: "strong",
-      outlook: "neutral",
-      marketExpectation: "inline",
-      priceReaction: "up",
-    },
-    results: {
-      revenue: { value: 13600, yoy: 3.2 },
-      operatingProfit: { value: 1920, yoy: 4.6 },
-      ordinaryProfit: { value: 1860, yoy: 3.9 },
-      netProfit: { value: 1250, yoy: 5.1 },
-    },
-    forecast: {
-      revenue: { value: 14000, yoy: 2.9 },
-      operatingProfit: { value: 1980, yoy: 3.1 },
-    },
-    dividend: { value: 5.4, difference: 0.2 },
-    pts: {
-      price: 163.2,
-      change: 2.0,
-      changePercent: 1.25,
-      previousClose: 161.2,
-      sparkline: [161.2, 161.8, 162.1, 162.6, 163.0, 163.2],
-    },
-    manga: [
-      { title: "会社の主張", speaker: "会社", dialogue: "派手ではないけど、今年も安定です", mood: "confident" },
-      { title: "決算内容", speaker: "会社", dialogue: "増収増益、配当もちょっと増やします", mood: "happy" },
-      { title: "市場の反応", speaker: "市場", dialogue: "安心感はあるね", mood: "neutral" },
-      { title: "結果", speaker: "市場", dialogue: "PTS +1.25%。じわっと評価", mood: "happy" },
-    ],
-  },
-];
+type RawRecord = Record<string, unknown>;
 
-export const getEarningsByCode = (code: string) => earnings.find((item) => item.code === code);
+const asRecord = (value: unknown): RawRecord => (value && typeof value === "object" && !Array.isArray(value) ? (value as RawRecord) : {});
+
+const pick = <T>(row: RawRecord, camelKey: string, snakeKey: string, fallback: T): T => {
+  const value = row[camelKey] ?? row[snakeKey];
+  return value === undefined || value === null ? fallback : (value as T);
+};
+
+const textArray = (value: unknown): string[] => {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value === "string") return value.split(",").map((item) => item.trim()).filter(Boolean);
+  return [];
+};
+
+const numberArray = (value: unknown): number[] => {
+  if (Array.isArray(value)) return value.map(Number).filter((item) => Number.isFinite(item));
+  return [];
+};
+
+const metric = (value: unknown) => {
+  const data = asRecord(value);
+  return {
+    value: Number(data.value ?? 0),
+    yoy: Number(data.yoy ?? 0),
+  };
+};
+
+const optionalMetric = (value: unknown) => {
+  if (!value) return undefined;
+  return metric(value);
+};
+
+const normalizeEarnings = (row: RawRecord): Earnings => {
+  const ratings = asRecord(pick(row, "ratings", "ratings", {}));
+  const results = asRecord(pick(row, "results", "results", {}));
+  const forecast = asRecord(pick(row, "forecast", "forecast", undefined));
+  const dividend = asRecord(pick(row, "dividend", "dividend", undefined));
+  const pts = asRecord(pick(row, "pts", "pts", undefined));
+
+  return {
+    code: String(pick(row, "code", "code", "")),
+    companyName: String(pick(row, "companyName", "company_name", "")),
+    sector: String(pick(row, "sector", "sector", "")),
+    announcedAt: String(pick(row, "announcedAt", "announced_at", "")),
+    category: String(pick(row, "category", "category", "")),
+    attentionScore: Number(pick(row, "attentionScore", "attention_score", 0)),
+    headline: String(pick(row, "headline", "headline", "")),
+    shortHeadline: String(pick(row, "shortHeadline", "short_headline", "")),
+    summary: String(pick(row, "summary", "summary", "")),
+    points: textArray(pick(row, "points", "points", [])),
+    tags: textArray(pick(row, "tags", "tags", [])),
+    ratings: {
+      earnings: String(ratings.earnings ?? "neutral") as RatingLevel,
+      outlook: String(ratings.outlook ?? "neutral") as RatingLevel,
+      marketExpectation: String(ratings.marketExpectation ?? ratings.market_expectation ?? "inline") as Expectation,
+      priceReaction: String(ratings.priceReaction ?? ratings.price_reaction ?? "flat") as PriceReaction,
+    },
+    results: {
+      revenue: metric(results.revenue),
+      operatingProfit: metric(results.operatingProfit ?? results.operating_profit),
+      ordinaryProfit: optionalMetric(results.ordinaryProfit ?? results.ordinary_profit),
+      netProfit: metric(results.netProfit ?? results.net_profit),
+      orders: optionalMetric(results.orders),
+    },
+    forecast: forecast && Object.keys(forecast).length
+      ? {
+          revenue: optionalMetric(forecast.revenue),
+          operatingProfit: optionalMetric(forecast.operatingProfit ?? forecast.operating_profit),
+        }
+      : undefined,
+    dividend: dividend && Object.keys(dividend).length
+      ? {
+          value: Number(dividend.value ?? 0),
+          difference: Number(dividend.difference ?? 0),
+        }
+      : undefined,
+    pts: pts && Object.keys(pts).length
+      ? {
+          price: Number(pts.price ?? 0),
+          change: Number(pts.change ?? 0),
+          changePercent: Number(pts.changePercent ?? pts.change_percent ?? 0),
+          previousClose: Number(pts.previousClose ?? pts.previous_close ?? 0),
+          sparkline: numberArray(pts.sparkline),
+        }
+      : undefined,
+    manga: Array.isArray(row.manga) ? (row.manga as MangaPanel[]) : [],
+  };
+};
+
+export async function fetchEarnings() {
+  const rows = await supabaseSelect<RawRecord[]>("earnings", "select=*&order=attention_score.desc");
+  return rows.map(normalizeEarnings);
+}
+
+export async function fetchEarningsByCode(code: string) {
+  const rows = await supabaseSelect<RawRecord[]>("earnings", `select=*&code=eq.${encodeURIComponent(code)}&limit=1`);
+  return rows[0] ? normalizeEarnings(rows[0]) : undefined;
+}
