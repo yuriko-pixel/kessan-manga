@@ -92,7 +92,7 @@ const normalizeEarnings = (row: RawRecord): Earnings => {
 };
 
 export async function fetchEarnings() {
-  const rows = await supabaseSelect<RawRecord[]>("earnings", "select=*&order=attention_score.desc");
+  const rows = await supabaseSelect<RawRecord[]>("earnings", "select=*");
   return rows.map(normalizeEarnings);
 }
 

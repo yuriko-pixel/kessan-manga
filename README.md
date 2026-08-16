@@ -24,9 +24,18 @@
 - `PtsCard`
 - `EmptyState`
 
-## データ構造
+## データ取得
 
-モックデータは `src/data/earnings.ts` に配置しています。型は `src/types.ts` に定義し、銘柄情報、見出し、タグ、評価、決算数値、PTS、漫画パネルをまとめています。
+決算データは Supabase の `earnings` テーブルから取得します。ローカルのサンプルデータへのフォールバックはありません。
+
+`.env.local` に以下を設定してください。
+
+```bash
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-or-publishable-key
+```
+
+型は `src/types.ts` に定義し、銘柄情報、見出し、タグ、評価、決算数値、PTS、漫画パネルをまとめています。DB カラムは `company_name` / `attention_score` などの snake_case と、既存画面に近い camelCase のどちらも読み取れるようにしています。
 
 ## 起動方法
 

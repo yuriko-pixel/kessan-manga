@@ -1,11 +1,44 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import EarningsDetail from "../components/EarningsDetail";
 import EmptyState from "../components/EmptyState";
-import { getEarningsByCode } from "../data/earnings";
+import { fetchEarningsByCode } from "../data/earnings";
+import type { Earnings } from "../types";
 
 export default function StockDetailPage() {
   const { code = "" } = useParams();
-  const item = getEarningsByCode(code);
+  const [item, setItem] = useState<Earnings | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isActive = true;
+    setIsLoading(true);
+    setError(null);
+
+    fetchEarningsByCode(code)
+      .then((result) => {
+        if (isActive) setItem(result);
+      })
+      .catch((fetchError: unknown) => {
+        if (isActive) setError(fetchError instanceof Error ? fetchError.message : "Supabaseからの取得に失敗しました。");
+      })
+      .finally(() => {
+        if (isActive) setIsLoading(false);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [code]);
+
+  if (isLoading) {
+    return <EmptyState message="Supabaseから銘柄データを読み込んでいます。" />;
+  }
+
+  if (error) {
+    return <EmptyState message={error} />;
+  }
 
   if (!item) {
     return (
