@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import StockDetailPage from "./pages/StockDetailPage";
 import RankingPage from "./pages/RankingPage";
 import MangaPage from "./pages/MangaPage";
+import AdminPage from "./pages/AdminPage";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/ranking" element={<RankingPage />} />
             <Route path="/manga" element={<MangaPage />} />
             <Route path="/stocks/:code" element={<StockDetailPage />} />
+            <Route path="/admin" element={<AdminPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

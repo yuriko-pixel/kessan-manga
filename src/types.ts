@@ -56,3 +56,15 @@ export type Earnings = {
   };
   manga: MangaPanel[];
 };
+
+export type EarningsPostInput = {
+  ticker: string;
+  company_name: string;
+  title: string;
+  summary: string[];
+  short_summary: string;
+  continuation?: string[];
+  conclusion: string;
+  source_url?: string;
+  published_at: string;
+};

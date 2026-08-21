@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "api/admin/page.ts": {
+      "includeFiles": "dist/index.html"
+    }
+  },
+  "routes": [
+    { "src": "/api/admin/earnings", "dest": "/api/admin/earnings" },
+    { "src": "/api/admin/session", "dest": "/api/admin/session" },
+    { "src": "/admin(?:/.*)?", "dest": "/api/admin/page" },
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}
